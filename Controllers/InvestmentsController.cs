@@ -10,12 +10,12 @@ namespace InvestmentApi.Controllers
     [Route("api/[controller]")]
     public class InvestmentsController : ControllerBase
     {
-        private readonly InvestmentService _service;
+        private readonly IInvestmentService _investmentService;
 
-        public InvestmentsController(InvestmentService service)
-        {
-            _service = service;
-        }
+    public InvestmentController(IInvestmentService investmentService)
+    {
+        _investmentService = investmentService;
+    }
 
         [HttpGet]
         public IActionResult GetAll() => Ok(_service.GetAll());
