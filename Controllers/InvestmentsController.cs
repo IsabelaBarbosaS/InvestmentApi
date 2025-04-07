@@ -1,58 +1,41 @@
 using Microsoft.AspNetCore.Mvc;
-using InvestmentApi.Models;
 using InvestmentApi.Services;
 using InvestmentApi.DTOs;
-using System;
 
 namespace InvestmentApi.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class InvestmentsController : ControllerBase
+    public class InvestmentController : ControllerBase
     {
         private readonly IInvestmentService _investmentService;
 
-    public InvestmentController(IInvestmentService investmentService)
-    {
-        _investmentService = investmentService;
-    }
+        public InvestmentController(IInvestmentService investmentService)
+        {
+            _investmentService = investmentService;
+        }
 
+        /// <summary>
+        /// Retorna todos os investimentos disponíveis.
+        /// </summary>
         [HttpGet]
-        public IActionResult GetAll() => Ok(_service.GetAll());
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(Guid id)
+        public ActionResult<IEnumerable<InvestmentDto>> GetInvestments()
         {
-            var investment = _service.GetById(id);
-            return investment == null ? NotFound() : Ok(investment);
+            var investimentos = _investmentService.GetAll();
+            return Ok(investimentos);
         }
 
-        [HttpPost]
-        public IActionResult Create(Investment investment)
+        /// <summary>
+        /// Simula o retorno do investimento com base no valor e data de vencimento.
+        /// </summary>
+        [HttpPost("simular")]
+        public ActionResult<SimulationResultDto> Simulate([FromBody] InvestmentSimulationDto input)
         {
-            _service.Add(investment);
-            return CreatedAtAction(nameof(GetById), new { id = investment.Id }, investment);
-        }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-        [HttpPut("{id}")]
-        public IActionResult Update(Guid id, Investment updated)
-        {
-            _service.Update(id, updated);
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(Guid id)
-        {
-            _service.Delete(id);
-            return NoContent();
-        }
-
-        [HttpPost("simulate")]
-        public IActionResult Simulate(SimulationRequest request)
-        {
-            var finalAmount = _service.SimulateReturn(request.InitialAmount, request.Months, request.AnnualInterestRate);
-            return Ok(new SimulationResult { FinalAmount = finalAmount });
+            var resultado = _investmentService.Simulate(input);
+            return Ok(resultado);
         }
     }
 }
