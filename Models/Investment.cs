@@ -1,12 +1,11 @@
-using System;
-
 namespace InvestmentApi.Models
 {
     public class Investment
     {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public decimal InterestRate { get; set; } // Anual
+        public string Nome { get; set; }
+        public string Tipo { get; set; } // Ex: CDB, Tesouro Direto
+        public decimal ValorMinimo { get; set; }
+        public double RentabilidadeAnual { get; set; } // Percentual ao ano, ex: 13.75
+        public DateTime Vencimento { get; set; }
     }
 }
