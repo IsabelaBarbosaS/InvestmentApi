@@ -1,50 +1,71 @@
+using InvestmentApi.DTOs;
 using InvestmentApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace InvestmentApi.Services
 {
-    public class InvestmentService
+    public class InvestmentService : IInvestmentService
     {
-        private readonly List<Investment> _investments = new();
+        private readonly List<Investment> _investments;
 
-        public IEnumerable<Investment> GetAll() => _investments;
-
-        public Investment GetById(Guid id) =>
-            _investments.FirstOrDefault(i => i.Id == id);
-
-        public void Add(Investment investment)
+        public InvestmentService()
         {
-            investment.Id = Guid.NewGuid();
-            _investments.Add(investment);
-        }
-
-        public void Update(Guid id, Investment updated)
-        {
-            var existing = GetById(id);
-            if (existing != null)
+            // Lista simulada de investimentos (mock)
+            _investments = new List<Investment>
             {
-                existing.Name = updated.Name;
-                existing.Type = updated.Type;
-                existing.InterestRate = updated.InterestRate;
-            }
+                new Investment
+                {
+                    Nome = "CDB Banco XP",
+                    Tipo = "Renda Fixa",
+                    ValorMinimo = 1000,
+                    RentabilidadeAnual = 13.75, // % ao ano
+                    Vencimento = DateTime.Today.AddMonths(12)
+                },
+                new Investment
+                {
+                    Nome = "Tesouro Direto",
+                    Tipo = "Tesouro Prefixado",
+                    ValorMinimo = 30,
+                    RentabilidadeAnual = 10.5,
+                    Vencimento = DateTime.Today.AddYears(2)
+                }
+            };
         }
 
-        public void Delete(Guid id)
+        public IEnumerable<InvestmentDto> GetAll()
         {
-            var investment = GetById(id);
-            if (investment != null)
+            return _investments.Select(inv => new InvestmentDto
             {
-                _investments.Remove(investment);
-            }
+                Nome = inv.Nome,
+                Tipo = inv.Tipo,
+                ValorMinimo = inv.ValorMinimo,
+                RentabilidadeAnual = inv.RentabilidadeAnual,
+                Vencimento = inv.Vencimento
+            });
         }
 
-        public decimal SimulateReturn(decimal initialAmount, int months, decimal annualRate)
+        public SimulationResultDto Simulate(InvestmentSimulationDto input)
         {
-            double rate = (double)annualRate / 100 / 12;
-            double amount = (double)initialAmount * Math.Pow(1 + rate, months);
-            return (decimal)amount;
+            var dias = (input.Vencimento - DateTime.Today).Days;
+
+            if (dias <= 0)
+            {
+                throw new ArgumentException("A data de vencimento deve ser futura.");
+            }
+
+            // Taxa fixa para simulação — na prática, poderia vir de um investimento escolhido
+            var taxaAnual = 13.75;
+            var taxaDiaria = taxaAnual / 100 / 365;
+
+            var valorFinal = input.ValorInicial * (decimal)Math.Pow((1 + taxaDiaria), dias);
+            var rentabilidade = valorFinal - input.ValorInicial;
+
+            return new SimulationResultDto
+            {
+                ValorFinal = Math.Round(valorFinal, 2),
+                Rentabilidade = Math.Round(rentabilidade, 2),
+                TaxaUsada = taxaAnual,
+                DiasInvestidos = dias
+            };
         }
     }
 }
