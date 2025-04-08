@@ -1,15 +1,20 @@
-using System;
-using System.ComponentModel.DataAnnotations;
-
 namespace InvestmentApi.DTOs
 {
+    /// <summary>
+    /// DTO com os dados necessários para simular um investimento ao longo do tempo.
+    /// </summary>
     public class InvestmentSimulationDto
     {
-        [Required(ErrorMessage = "O valor inicial é obrigatório.")]
-        [Range(1, double.MaxValue, ErrorMessage = "O valor inicial deve ser maior que zero.")]
-        public decimal ValorInicial { get; set; }
+        // Montante inicial investido.
+        public decimal InitialAmount { get; set; }
 
-        [Required(ErrorMessage = "A data de vencimento é obrigatória.")]
-        public DateTime Vencimento { get; set; }
+        // Contribuição mensal adicional ao investimento.
+        public decimal MonthlyContribution { get; set; }
+
+        // Duração da simulação em anos.
+        public int Years { get; set; }
+
+        // Taxa de juros anual em percentual para simulação.
+        public decimal AnnualInterestRate { get; set; }
     }
 }
