@@ -1,11 +1,20 @@
 namespace InvestmentApi.DTOs
 {
+    /// <summary>
+    /// DTO que representa os dados de um investimento para transferência (retorno via API).
+    /// </summary>
     public class InvestmentDto
     {
-        public string Nome { get; set; }
-        public string Tipo { get; set; }
-        public decimal ValorMinimo { get; set; }
-        public double RentabilidadeAnual { get; set; } // Ex: CDI, 110%
-        public DateTime Vencimento { get; set; }
+        // Identificador do investimento.
+        public int Id { get; set; }
+
+        // Nome ou descrição do investimento.
+        public string Name { get; set; }
+
+        // Tipo ou categoria do investimento (ex: Ações, Títulos, Poupança).
+        public string Type { get; set; }
+
+        // Taxa de juros anual associada ao investimento (em percentual).
+        public decimal AnnualInterestRate { get; set; }
     }
 }
