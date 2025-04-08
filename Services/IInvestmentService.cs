@@ -1,21 +1,19 @@
 using InvestmentApi.DTOs;
-using System.Collections.Generic;
 
 namespace InvestmentApi.Services
 {
+    /// <summary>
+    /// Interface do serviço de investimentos definindo as operações disponíveis.
+    /// </summary>
     public interface IInvestmentService
     {
-        /// <summary>
-        /// Retorna todos os investimentos disponíveis.
-        /// </summary>
-        /// <returns>Lista de investimentos disponíveis.</returns>
-        IEnumerable<InvestmentDto> GetAll();
+        // Retorna todos os investimentos, opcionalmente filtrando por tipo.
+        IEnumerable<InvestmentDto> GetInvestments(string? type = null);
 
-        /// <summary>
-        /// Simula o retorno de um investimento com base no valor inicial e na data de vencimento.
-        /// </summary>
-        /// <param name="input">Dados de entrada da simulação.</param>
-        /// <returns>Resultado da simulação contendo valor final, rentabilidade e detalhes.</returns>
-        SimulationResultDto Simulate(InvestmentSimulationDto input);
+        // Retorna um investimento específico pelo ID (ou null se não encontrado).
+        InvestmentDto? GetInvestmentById(int id);
+
+        // Realiza a simulação de investimento com base nos parâmetros fornecidos.
+        SimulationResultDto SimulateInvestment(InvestmentSimulationDto simulation);
     }
 }
