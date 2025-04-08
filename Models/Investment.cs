@@ -1,11 +1,20 @@
 namespace InvestmentApi.Models
 {
+    /// <summary>
+    /// Modelo de domínio representando um investimento.
+    /// </summary>
     public class Investment
     {
-        public string Nome { get; set; }
-        public string Tipo { get; set; } // Ex: CDB, Tesouro Direto
-        public decimal ValorMinimo { get; set; }
-        public double RentabilidadeAnual { get; set; } // Percentual ao ano, ex: 13.75
-        public DateTime Vencimento { get; set; }
+        // Identificador único do investimento.
+        public int Id { get; set; }
+
+        // Nome ou descrição do investimento.
+        public string Name { get; set; }
+
+        // Tipo ou categoria do investimento.
+        public string Type { get; set; }
+
+        // Taxa de juros anual (percentual) esperada para este investimento.
+        public decimal AnnualInterestRate { get; set; }
     }
 }
